@@ -173,9 +173,19 @@ body {
 }
 
 .theme-colors {
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 10px;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+    opacity: 0;
+}
+
+.theme-colors.show {
+    display: flex;
+    max-height: 200px;
+    opacity: 1;
 }
 
 .theme-color-btn {
@@ -531,13 +541,9 @@ label {
 
 /* بهبود استایل پاراگراف‌ها در داستان */
 .story-content p {
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    letter-spacing: 0.05em;
-    word-spacing: 0.15em;
-    line-height: 1.9;
-    opacity: 0;
-    animation: paragraph-appear 0.5s ease-in-out forwards;
+    margin-bottom: 8px;
+    padding: 0;
+    border-bottom: none;
 }
 
 .story-content p:last-child {
@@ -560,7 +566,7 @@ label {
 @keyframes paragraph-appear {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(20px);
     }
     to {
         opacity: 1;
@@ -594,19 +600,27 @@ label {
 /* افکت خوانایی برای ایموجی‌ها */
 .emoji {
     display: inline-block;
-    transform: scale(1);
-    transition: transform 0.2s ease;
+    font-size: 1.3em;
+    vertical-align: middle;
     margin: 0 2px;
-    animation: emoji-bounce 0.5s var(--transition-timing);
+    min-width: 1.3em;
+    text-align: center;
+    transform-origin: center;
+    line-height: 1;
+    font-style: normal;
 }
 
-.emoji:hover {
-    transform: scale(1.5);
+/* حذف انیمیشن برای ایموجی‌ها */
+.emoji:not(.word-enter) {
+    animation: none;
+    opacity: 1;
+    transform: none;
 }
 
-@keyframes emoji-bounce {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+/* استایل برای ایموجی‌هایی که با ایموجی شروع می‌شوند */
+p:first-letter:is(.emoji) {
+    font-size: 1.5em;
+    margin-right: 5px;
 }
 
 /* افکت‌های جدید برای ورود کلمات */
@@ -1069,14 +1083,6 @@ h2 {
     display: none;
 }
 
-/* استایل برای ایموجی‌ها */
-.emoji {
-    display: inline-block;
-    font-size: 1.2em;
-    margin: 0 3px;
-    vertical-align: middle;
-}
-
 /* استایل‌های مربوط به اعلان‌ها */
 .notification {
     position: fixed;
@@ -1425,30 +1431,6 @@ h2 {
     word-spacing: 0.15em;
 }
 
-/* بهبود استایل پاراگراف‌ها در داستان */
-.story-content p {
-    margin-bottom: 20px;
-    padding-bottom: 5px;
-    letter-spacing: 0.05em;
-    word-spacing: 0.15em;
-    line-height: 1.9;
-    opacity: 0;
-    animation: paragraph-appear 0.5s ease-in-out forwards;
-}
-
-/* بهبود نمایش در حالت تاریک */
-.theme-dark .story-content {
-    color: rgba(240, 240, 240, 0.95);
-    background-color: rgba(30, 30, 30, 0.3);
-    border-radius: 10px;
-}
-
-.theme-dark .view-story-modal .story-full-content {
-    background-color: rgba(30, 30, 30, 0.5);
-    color: rgba(240, 240, 240, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
 /* استایل برای نمایش خطا در داستان */
 .error-container {
     display: flex;
@@ -1480,4 +1462,12 @@ h2 {
     font-size: 14px;
     color: var(--text-color-light);
     margin-top: 10px;
+}
+
+/* استایل برای خطوط داستان */
+.story-line {
+    display: block;
+    margin-bottom: 6px;
+    line-height: 1.8;
+    transition: opacity 0.3s ease, transform 0.3s ease;
 } 

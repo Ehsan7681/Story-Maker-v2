@@ -1,22 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const apiKeyInput = document.getElementById('apiKey');
+    const storyThemeInput = document.getElementById('storyTheme');
+    const storyKeywordsInput = document.getElementById('storyKeywords');
+    const storyLengthSelect = document.getElementById('storyLength');
+    const customLengthContainer = document.getElementById('customLengthContainer');
+    const customWordCountInput = document.getElementById('customWordCount');
+    const storyToneSelect = document.getElementById('storyTone');
+    const aiModelSelect = document.getElementById('aiModel');
     const generateBtn = document.getElementById('generateStory');
     const loadingSpinner = document.getElementById('loading');
     const storyResult = document.getElementById('storyResult');
     const storyContent = document.getElementById('storyContent');
-    const apiKeyInput = document.getElementById('apiKey');
+    const wordCount = document.getElementById('wordCount');
     const togglePasswordBtn = document.getElementById('togglePassword');
-    const aiModelSelect = document.getElementById('aiModel');
     const modelLoadingStatus = document.getElementById('modelLoadingStatus');
-    const wordCounter = document.getElementById('wordCounter');
-    const storyLengthSelect = document.getElementById('storyLength');
-    const customLengthContainer = document.getElementById('customLengthContainer');
-    const customWordCount = document.getElementById('customWordCount');
-    const searchableSelectContainer = document.querySelector('.searchable-select-container');
-    const storyThemeInput = document.getElementById('storyTheme');
-    const storyKeywordsInput = document.getElementById('storyKeywords');
     
-    // متغیرهای مربوط به تغییر تم و حالت تاریک
-    const toggleDarkModeBtn = document.getElementById('toggleDarkMode');
+    // متغیرهای مربوط به تنظیمات تم
+    const themeToggle = document.getElementById('themeToggle');
     const themeColorBtns = document.querySelectorAll('.theme-color-btn');
     
     // متغیرهای مربوط به مدیریت داستان‌ها
@@ -44,60 +44,64 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // مدیریت حالت تاریک
     function initThemeManagement() {
-        // بارگذاری حالت تاریک از localStorage
-        const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (savedDarkMode) {
-            document.body.classList.remove('theme-light');
-            document.body.classList.add('theme-dark');
-            toggleDarkModeBtn.querySelector('i').classList.remove('fa-moon');
-            toggleDarkModeBtn.querySelector('i').classList.add('fa-sun');
-        }
-        
-        // بارگذاری تم رنگی از localStorage
-        const savedTheme = localStorage.getItem('colorTheme') || 'blue';
+        // بررسی حالت تاریک/روشن ذخیره شده
+        const savedTheme = localStorage.getItem('theme') || 'light';
         document.body.classList.add(`theme-${savedTheme}`);
         
-        // فعال کردن دکمه تم انتخاب شده
-        themeColorBtns.forEach(btn => {
-            if (btn.dataset.theme === savedTheme) {
+        // بررسی تم رنگی ذخیره شده
+        const savedColorTheme = localStorage.getItem('colorTheme') || 'blue';
+        document.body.classList.add(`theme-${savedColorTheme}`);
+        
+        // نشانه‌گذاری دکمه تم فعال
+        document.querySelectorAll('.theme-color-btn').forEach(btn => {
+            if (btn.getAttribute('data-color') === savedColorTheme) {
                 btn.classList.add('active');
             }
         });
         
-        // رویداد تغییر حالت تاریک/روشن
-        toggleDarkModeBtn.addEventListener('click', () => {
-            const isDarkMode = document.body.classList.contains('theme-dark');
+        // اضافه کردن رویداد کلیک برای تغییر حالت تاریک/روشن
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const newTheme = document.body.classList.contains('theme-light') ? 'dark' : 'light';
             
-            if (isDarkMode) {
-                document.body.classList.remove('theme-dark');
-                document.body.classList.add('theme-light');
-                toggleDarkModeBtn.querySelector('i').classList.remove('fa-sun');
-                toggleDarkModeBtn.querySelector('i').classList.add('fa-moon');
-                localStorage.setItem('darkMode', 'false');
-            } else {
-                document.body.classList.remove('theme-light');
-                document.body.classList.add('theme-dark');
-                toggleDarkModeBtn.querySelector('i').classList.remove('fa-moon');
-                toggleDarkModeBtn.querySelector('i').classList.add('fa-sun');
-                localStorage.setItem('darkMode', 'true');
+            // حذف کلاس‌های قبلی و اضافه کردن کلاس جدید
+            document.body.classList.remove('theme-light', 'theme-dark');
+            document.body.classList.add(`theme-${newTheme}`);
+            
+            // ذخیره در localStorage
+            localStorage.setItem('theme', newTheme);
+        });
+        
+        // اضافه کردن رویداد برای باز و بسته کردن منوی رنگ‌ها
+        document.getElementById('themeToggle').addEventListener('click', (e) => {
+            e.stopPropagation();  // جلوگیری از بسته شدن منو با کلیک روی دکمه
+            const themeColors = document.querySelector('.theme-colors');
+            themeColors.classList.toggle('show');
+        });
+        
+        // بستن منوی رنگ‌ها با کلیک در هر جای دیگر صفحه
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.theme-controls')) {
+                document.querySelector('.theme-colors').classList.remove('show');
             }
         });
         
-        // رویداد تغییر تم رنگی
-        themeColorBtns.forEach(btn => {
+        // اضافه کردن رویداد کلیک برای دکمه‌های رنگ تم
+        document.querySelectorAll('.theme-color-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const selectedTheme = btn.dataset.theme;
+                const color = btn.getAttribute('data-color');
                 
-                // حذف کلاس‌های تم قبلی
-                themeColorBtns.forEach(b => b.classList.remove('active'));
+                // حذف کلاس‌های رنگی قبلی
                 document.body.classList.remove('theme-blue', 'theme-purple', 'theme-green', 'theme-orange');
+                document.body.classList.add(`theme-${color}`);
                 
-                // اضافه کردن کلاس تم جدید
+                // ذخیره در localStorage
+                localStorage.setItem('colorTheme', color);
+                
+                // بروزرسانی نشانگر انتخاب
+                document.querySelectorAll('.theme-color-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
                 btn.classList.add('active');
-                document.body.classList.add(`theme-${selectedTheme}`);
-                
-                // ذخیره تم در localStorage
-                localStorage.setItem('colorTheme', selectedTheme);
             });
         });
     }
@@ -177,7 +181,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadPreviousInputs();
     
     // بارگذاری لحن انتخاب شده قبلی
-    const storyToneSelect = document.getElementById('storyTone');
     if (localStorage.getItem('selectedTone')) {
         storyToneSelect.value = localStorage.getItem('selectedTone');
     }
@@ -228,13 +231,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // تنظیم محدودیت‌های ورودی طول سفارشی
-    customWordCount.addEventListener('input', () => {
-        let value = parseInt(customWordCount.value);
-        if (value < 50) customWordCount.value = 50;
-        if (value > 1000) customWordCount.value = 1000;
+    customWordCountInput.addEventListener('input', () => {
+        let value = parseInt(customWordCountInput.value);
+        if (value < 50) customWordCountInput.value = 50;
+        if (value > 1000) customWordCountInput.value = 1000;
         
         // نمایش عدد فارسی در placeholder
-        customWordCount.placeholder = `تعداد کلمات مورد نظر را وارد کنید (${toPersianNumber(50)} تا ${toPersianNumber(1000)})`;
+        customWordCountInput.placeholder = `تعداد کلمات مورد نظر را وارد کنید (${toPersianNumber(50)} تا ${toPersianNumber(1000)})`;
     });
     
     // اضافه کردن قابلیت جستجو به باکس انتخاب مدل
@@ -755,7 +758,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // آماده‌سازی المان‌ها
             storyResult.style.display = 'block';
             document.querySelector('.story-actions').style.display = 'flex';
-            wordCounter.style.display = 'block';
+            wordCount.style.display = 'block';
             
             // نمایش داستان به صورت زنده با انیمیشن‌های جدید
             typeStory(story);
@@ -795,7 +798,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // تابع نمایش متن به صورت زنده با انیمیشن‌های جدید
+    // تابع نمایش متن به صورت زنده با انیمیشن‌های جدید - نمایش خط به خط
     function typeStory(story) {
         // بررسی اگر داستان undefined یا null است
         if (!story) {
@@ -819,53 +822,70 @@ document.addEventListener('DOMContentLoaded', () => {
         if (wordCount) {
             wordCount.textContent = toPersianNumber(0);
         }
-        wordCounter.textContent = `تعداد کلمات: ${toPersianNumber(0)}`;
+        wordCount.textContent = `تعداد کلمات: ${toPersianNumber(0)}`;
         
         // نمایش دکمه‌های عملیات
         document.querySelector('.story-actions').style.display = 'flex';
         // نمایش شمارنده کلمات
-        wordCounter.style.display = 'block';
+        wordCount.style.display = 'block';
         
-        // جدا کردن پاراگراف‌ها و اطمینان از جداسازی صحیح متن
-        let paragraphs = story.split('\n\n').filter(p => p && p.trim() !== '');
+        // جدا کردن خطوط داستان
+        let lines = story.split(/\n/).filter(line => line && line.trim() !== '');
         
-        // اگر پاراگرافی یافت نشد، کل متن را یک پاراگراف در نظر بگیریم
-        if (paragraphs.length === 0) {
-            paragraphs = [story];
-        }
-        
-        // اگر تعداد پاراگراف‌ها کم است، بررسی جداکننده‌های دیگر
-        if (paragraphs.length < 3) {
-            // تست با الگوهای مختلف جداکننده پاراگراف
-            const testParagraphs1 = story.split('\n').filter(p => p && p.trim() !== '');
-            const testParagraphs2 = story.split(/\n\s*\n/).filter(p => p && p.trim() !== '');
-            
-            // انتخاب بهترین نتیجه
-            if (testParagraphs1.length > paragraphs.length || testParagraphs2.length > paragraphs.length) {
-                paragraphs = (testParagraphs1.length > testParagraphs2.length) ? testParagraphs1 : testParagraphs2;
-                console.log('تصحیح فرمت پاراگراف‌ها انجام شد');
+        // اگر فقط یک خط باشد، داستان را به جملات تقسیم می‌کنیم
+        if (lines.length <= 1) {
+            lines = story.split(/([.!?؟]+)/).filter(line => line && line.trim() !== '');
+            // ترکیب نشانه‌های نقطه‌گذاری با جمله قبلی
+            let combinedLines = [];
+            for (let i = 0; i < lines.length; i++) {
+                if (/^[.!?؟]+$/.test(lines[i]) && i > 0) {
+                    combinedLines[combinedLines.length - 1] += lines[i];
+                } else {
+                    combinedLines.push(lines[i]);
+                }
             }
+            lines = combinedLines;
         }
         
-        // بررسی دوباره و ساخت پاراگراف‌ها در صورت کم بودن
-        if (paragraphs.length < 3 && story.length > 500) {
-            // تقسیم داستان طولانی به پاراگراف‌های منطقی
-            paragraphs = splitIntoLogicalParagraphs(story);
-            console.log('داستان به پاراگراف‌های منطقی تقسیم شد');
-        }
+        // متغیر برای شمارش کلمات کلی
+        let totalTypedWords = 0;
+        let currentParagraph = null;
         
-        // ایجاد المنت‌های پاراگراف
-        paragraphs.forEach((paragraph, index) => {
-            if (!paragraph) return; // رد کردن پاراگراف‌های خالی
+        // تابع برای نمایش خطوط یکی پس از دیگری
+        function typeLines(index) {
+            // اگر به آخرین خط رسیدیم، پایان دهیم
+            if (index >= lines.length) {
+                return;
+            }
             
-            const p = document.createElement('p');
-            p.style.animationDelay = `${index * 0.2}s`;
-            storyContent.appendChild(p);
+            const line = lines[index];
+            if (!line || line.trim() === '') {
+                typeLines(index + 1);
+                return;
+            }
+            
+            // ایجاد یک پاراگراف جدید اگر نیاز باشد یا استفاده از پاراگراف موجود
+            if (index % 5 === 0 || currentParagraph === null) {
+                currentParagraph = document.createElement('p');
+                currentParagraph.style.opacity = '1';
+                currentParagraph.style.transform = 'translateY(0)';
+                storyContent.appendChild(currentParagraph);
+            }
+            
+            // ایجاد المنت برای خط جدید
+            const lineElement = document.createElement('span');
+            lineElement.className = 'story-line';
+            lineElement.style.display = 'block';
+            lineElement.style.opacity = '0';
+            lineElement.style.transform = 'translateY(10px)';
+            lineElement.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out';
+            currentParagraph.appendChild(lineElement);
             
             // جدا کردن کلمات برای انیمیشن تایپ
-            const words = paragraph.split(' ').filter(w => w);
+            const words = line.split(' ').filter(w => w);
             let wordIndex = 0;
             
+            // شروع روند تایپ کلمات خط
             function addNextWord() {
                 if (wordIndex < words.length) {
                     const word = words[wordIndex];
@@ -883,36 +903,46 @@ document.addEventListener('DOMContentLoaded', () => {
                     // برای ایموجی‌ها، کلاس خاص اضافه کنیم
                     if (isEmoji(word)) {
                         span.classList.add('emoji');
+                        span.style.fontWeight = 'normal';
+                        span.style.direction = 'ltr';
+                        span.textContent = word + ' ';
                     }
                     
-                    p.appendChild(span);
+                    lineElement.appendChild(span);
                     wordIndex++;
+                    totalTypedWords++;
                     
                     // به‌روزرسانی شمارنده کلمات
-                    const currentWordCount = wordIndex + (index > 0 ? 
-                        paragraphs.slice(0, index).join(' ').split(/\s+/).filter(w => w).length : 0);
-                    
                     if (wordCount) {
-                        wordCount.textContent = toPersianNumber(currentWordCount);
+                        wordCount.textContent = toPersianNumber(totalTypedWords);
                     }
-                    wordCounter.innerHTML = `تعداد کلمات: <span>${toPersianNumber(currentWordCount)}</span> از <span>${toPersianNumber(totalWords)}</span>`;
+                    wordCount.innerHTML = `تعداد کلمات: <span>${toPersianNumber(totalTypedWords)}</span> از <span>${toPersianNumber(totalWords)}</span>`;
                     
                     // افزودن کلمه بعدی با تأخیر - سرعت بیشتر برای داستان‌های بلندتر
                     const speed = Math.min(30, Math.max(5, Math.floor(30 - (totalWords / 100))));
                     setTimeout(addNextWord, speed);
-                } else if (index < paragraphs.length - 1) {
-                    // پاراگراف فعلی تمام شده، ولی هنوز پاراگراف‌های دیگری باقی مانده‌اند
+                } else {
+                    // وقتی خط فعلی تمام شد، خط بعدی را نمایش دهیم
+                    lineElement.style.opacity = '1';
+                    lineElement.style.transform = 'translateY(0)';
+                    
+                    // تأخیر کوتاه قبل از شروع خط بعدی
                     setTimeout(() => {
-                        // با تأخیر کمی به پاراگراف بعدی می‌رویم
-                    }, 300);
+                        typeLines(index + 1);
+                    }, 200); // تأخیر بین خطوط
                 }
             }
             
-            // شروع افزودن کلمات با تأخیر برای هر پاراگراف
-            setTimeout(addNextWord, index * 500);
-        });
+            // شروع تایپ کلمات با تأخیر کوتاه
+            setTimeout(() => {
+                addNextWord();
+            }, 100);
+        }
         
-        // اسکرول به پایین برای دیدن نتیجه
+        // شروع فرآیند نمایش از اولین خط
+        typeLines(0);
+        
+        // اسکرول به بالای کانتینر داستان
         storyResult.scrollIntoView({ behavior: 'smooth' });
     }
     
@@ -946,8 +976,19 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // تابع تشخیص ایموجی
     function isEmoji(str) {
-        const emojiRegex = /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
-        return emojiRegex.test(str);
+        // بررسی رشته خالی
+        if (!str || str.length === 0) return false;
+        
+        // اگر فقط یک کاراکتر است و ایموجی است
+        if (str.length === 1) {
+            // الگوی رجکس برای تشخیص دامنه وسیعی از ایموجی‌ها
+            const emojiRegex = /[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F191}-\u{1F251}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F171}\u{1F17E}-\u{1F17F}\u{1F18E}\u{3030}\u{2B50}\u{2B55}\u{2934}-\u{2935}\u{2B05}-\u{2B07}\u{2B1B}-\u{2B1C}\u{3297}\u{3299}\u{303D}\u{00A9}\u{00AE}\u{2122}\u{23F3}\u{24C2}\u{23E9}-\u{23EF}\u{25AA}-\u{25AB}\u{25FB}-\u{25FE}\u{2611}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2705}\u{270A}-\u{270B}\u{2728}\u{274C}\u{274E}\u{2753}-\u{2755}\u{2757}\u{2795}-\u{2797}\u{27B0}\u{27BF}\u{2B1B}-\u{2B1C}\u{2B50}\u{2B55}]/u;
+            return emojiRegex.test(str);
+        }
+        
+        // اگر بیش از یک کاراکتر است، چک کنیم که آیا یک ترکیب ایموجی است
+        const combinedEmojiRegex = /^(?:[\u{1F300}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F1E6}-\u{1F1FF}\u{1F191}-\u{1F251}\u{1F004}\u{1F0CF}\u{1F170}-\u{1F171}\u{1F17E}-\u{1F17F}\u{1F18E}\u{3030}\u{2B50}\u{2B55}\u{2934}-\u{2935}\u{2B05}-\u{2B07}\u{2B1B}-\u{2B1C}\u{3297}\u{3299}\u{303D}\u{00A9}\u{00AE}\u{2122}\u{23F3}\u{24C2}\u{23E9}-\u{23EF}\u{25AA}-\u{25AB}\u{25FB}-\u{25FE}\u{2611}\u{2614}-\u{2615}\u{2648}-\u{2653}\u{267F}\u{2693}\u{26A1}\u{26AA}-\u{26AB}\u{26BD}-\u{26BE}\u{26C4}-\u{26C5}\u{26CE}\u{26D4}\u{26EA}\u{26F2}-\u{26F3}\u{26F5}\u{26FA}\u{26FD}\u{2705}\u{270A}-\u{270B}\u{2728}\u{274C}\u{274E}\u{2753}-\u{2755}\u{2757}\u{2795}-\u{2797}\u{27B0}\u{27BF}\u{2B1B}-\u{2B1C}\u{2B50}\u{2B55}][\uFE00-\uFE0F]?)+$/u;
+        return combinedEmojiRegex.test(str);
     }
     
     // تابع فرمت‌دهی به داستان برای نمایش
@@ -999,8 +1040,8 @@ document.addEventListener('DOMContentLoaded', () => {
             for (let i = 0; i < paragraph.length; i++) {
                 const char = paragraph.charAt(i);
                 if (isEmoji(char)) {
-                    // اضافه کردن فاصله مناسب برای ایموجی‌ها
-                    formatted += ` <span class="emoji">${char}</span> `;
+                    // اضافه کردن ایموجی با کلاس مخصوص بدون فاصله اضافی
+                    formatted += `<span class="emoji" style="font-weight:normal;direction:ltr;">${char}</span>`;
                 } else {
                     formatted += char;
                 }
@@ -1028,7 +1069,7 @@ document.addEventListener('DOMContentLoaded', () => {
         storyResult.style.display = 'block';
         loadingSpinner.style.display = 'none';
         document.querySelector('.story-actions').style.display = 'none';
-        wordCounter.style.display = 'none';
+        wordCount.style.display = 'none';
     }
     
     // بررسی وجود کلید API و بارگذاری مدل‌ها در صورت وجود
@@ -1103,7 +1144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestedLength = 'بلند (حدود ۶۰۰ کلمه)';
                 break;
             case 'custom':
-                requestedLength = `سفارشی (حدود ${toPersianNumber(customWordCount.value)} کلمه)`;
+                requestedLength = `سفارشی (حدود ${toPersianNumber(customWordCountInput.value)} کلمه)`;
                 break;
             default:
                 requestedLength = 'نامشخص';
@@ -1205,7 +1246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     targetWords = 600;
                     break;
                 case 'custom':
-                    targetWords = parseInt(customWordCount.value) || 400;
+                    targetWords = parseInt(customWordCountInput.value) || 400;
                     break;
                 default:
                     targetWords = 400;
@@ -1349,6 +1390,12 @@ ${keywords ? `کلمات کلیدی: ${keywords}` : ''}
                 // بررسی کامل بودن داستان
                 let processedStory = story;
                 
+                // افزودن ایموجی برای داستان‌های کودکانه
+                if (tone === 'childish') {
+                    console.log('افزودن ایموجی به داستان کودکانه...');
+                    processedStory = addEmojisToChildishStory(processedStory);
+                }
+                
                 // بررسی اگر داستان با جمله ناتمام پایان می‌یابد
                 const lastChar = processedStory.slice(-1);
                 if (!['.', '!', '?', '،', '؛', ':', '"', "'", ')', ']', '}', '»'].includes(lastChar)) {
@@ -1484,7 +1531,6 @@ ${keywords ? `کلمات کلیدی: ${keywords}` : ''}
         loadPreviousInputs();
         
         // بارگذاری لحن انتخاب شده قبلی
-        const storyToneSelect = document.getElementById('storyTone');
         if (localStorage.getItem('selectedTone')) {
             storyToneSelect.value = localStorage.getItem('selectedTone');
         }
@@ -1560,4 +1606,99 @@ ${keywords ? `کلمات کلیدی: ${keywords}` : ''}
     
     // شروع برنامه
     initializeApp();
+
+    // تابع افزودن ایموجی به داستان‌های کودکانه
+    function addEmojisToChildishStory(storyText, maxEmojisPerHundredWords = 10) {
+        // ایموجی‌های مناسب برای داستان‌های کودکانه
+        const childFriendlyEmojis = [
+            '😀', '😃', '😄', '😁', '😆', '😊', '🙂', '😉', '😎', 
+            '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🦁', '🐯', '🐮', 
+            '🐷', '🐸', '🐵', '🙈', '🙉', '🙊', '🐒', '🦆', '🦉', '🦄', '🦋', '🐝', 
+            '🌸', '🌹', '🌺', '🌻', '🌼', '🌷', '🌱', '🌲', '🌳', '🌴', '🌵', 
+            '🌞', '🌝', '⭐', '🌟', '✨', '⚡', '☄️', '💫', '🌈', '☀️', '🌤️', '☁️', 
+            '🎈', '🎆', '🎇', '🧸', '🎁', '🎉', '🎊', '🎠', '🎡', '🎢', '🎪', 
+            '🍦', '🍧', '🍨', '🍩', '🍪', '🍰', '🧁', '🍫', '🍬', '🍭', '🍎', '🍏', '🍐',
+            '💖', '💗', '💓', '💞', '💕', '❤️', '🧡', '💛', '💚', '💙', '💜'
+        ];
+
+        // تعیین تعداد کلمات
+        const words = storyText.split(/\s+/);
+        const wordCount = words.length;
+        
+        // محاسبه تعداد ایموجی مورد نیاز
+        const maxEmojis = Math.min(Math.floor(wordCount * maxEmojisPerHundredWords / 100), 50);
+        
+        if (maxEmojis <= 0) return storyText;
+        
+        // تقسیم داستان به جملات
+        const sentences = storyText.split(/([.!?؟]+\s)/);
+        let result = [];
+        let emojiCount = 0;
+        
+        // الگوریتم توزیع ایموجی‌ها
+        for (let i = 0; i < sentences.length; i++) {
+            if (emojiCount >= maxEmojis) {
+                result.push(sentences[i]);
+                continue;
+            }
+            
+            // افزودن ایموجی به انتهای جملات مناسب
+            if (i % 2 === 0 && sentences[i].trim().length > 10 && Math.random() < 0.4) {
+                // انتخاب تصادفی ایموجی
+                const randomEmoji = childFriendlyEmojis[Math.floor(Math.random() * childFriendlyEmojis.length)];
+                
+                // تعیین محل قرارگیری ایموجی (ابتدا، وسط یا انتها)
+                const position = Math.random();
+                
+                if (position < 0.2 && sentences[i].trim().length > 15) {
+                    // قرارگیری در ابتدای جمله (با احتمال کمتر)
+                    const sentenceParts = sentences[i].trim().split(/\s+/);
+                    if (sentenceParts.length > 3) {
+                        sentenceParts.splice(1, 0, randomEmoji);
+                        result.push(sentenceParts.join(' '));
+                    } else {
+                        result.push(`${randomEmoji} ${sentences[i]}`);
+                    }
+                } else if (position < 0.5) {
+                    // قرارگیری در وسط جمله
+                    const sentenceParts = sentences[i].trim().split(/\s+/);
+                    if (sentenceParts.length > 3) {
+                        const middleIndex = Math.floor(sentenceParts.length / 2);
+                        sentenceParts.splice(middleIndex, 0, randomEmoji);
+                        result.push(sentenceParts.join(' '));
+                    } else {
+                        result.push(`${sentences[i]} ${randomEmoji}`);
+                    }
+                } else {
+                    // قرارگیری در انتهای جمله (رایج‌ترین حالت)
+                    result.push(`${sentences[i]} ${randomEmoji}`);
+                }
+                
+                emojiCount++;
+            } else {
+                result.push(sentences[i]);
+            }
+        }
+        
+        // اطمینان از کامل شدن ایموجی‌ها
+        if (emojiCount < maxEmojis) {
+            // یافتن پاراگراف‌ها
+            let finalResult = result.join('');
+            const paragraphs = finalResult.split('\n\n');
+            
+            // اضافه کردن ایموجی به ابتدای هر پاراگراف
+            for (let i = 0; i < paragraphs.length && emojiCount < maxEmojis; i++) {
+                if (paragraphs[i].trim().length > 20) {
+                    const randomEmoji = childFriendlyEmojis[Math.floor(Math.random() * childFriendlyEmojis.length)];
+                    paragraphs[i] = `${randomEmoji} ${paragraphs[i]}`;
+                    emojiCount++;
+                }
+            }
+            
+            finalResult = paragraphs.join('\n\n');
+            return finalResult;
+        }
+        
+        return result.join('');
+    }
 });
