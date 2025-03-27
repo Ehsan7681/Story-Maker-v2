@@ -247,6 +247,8 @@ body {
     flex-direction: column;
     min-height: auto;
     overflow: visible;
+    margin: 0 auto;
+    flex: 1;
 }
 
 .glass-card {
@@ -1470,4 +1472,31 @@ h2 {
     margin-bottom: 6px;
     line-height: 1.8;
     transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* استایل برای footer */
+.footer {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    padding: 15px 0;
+    color: var(--text-color);
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    position: relative;
+    clear: both;
+    opacity: 0.85;
+}
+
+.footer p {
+    margin: 0;
+}
+
+.main-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 } 

@@ -29,134 +29,140 @@
         </div>
     </div>
     
-    <div class="container">
-        <div class="glass-card">
-            <h1>داستان‌ساز هوشمند</h1>
-            <p class="description">به کمک هوش مصنوعی داستان‌های جذاب بسازید!</p>
-            
-            <div class="form-group">
-                <label for="apiKey">کلید API OpenRouter:</label>
-                <div class="password-input-container">
-                    <input type="password" id="apiKey" placeholder="کلید API خود را وارد کنید" class="glass-input">
-                    <button type="button" id="togglePassword" class="toggle-password">
-                        <i class="fas fa-eye"></i>
-                    </button>
+    <div class="main-wrapper">
+        <div class="container">
+            <div class="glass-card">
+                <h1>داستان‌ساز هوشمند</h1>
+                <p class="description">به کمک هوش مصنوعی داستان‌های جذاب بسازید!</p>
+                
+                <div class="form-group">
+                    <label for="apiKey">کلید API OpenRouter:</label>
+                    <div class="password-input-container">
+                        <input type="password" id="apiKey" placeholder="کلید API خود را وارد کنید" class="glass-input">
+                        <button type="button" id="togglePassword" class="toggle-password">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                    <p class="api-help">کلید API را از <a href="https://openrouter.ai/keys" target="_blank">سایت OpenRouter</a> دریافت کنید و اینجا وارد کنید. کلید باید با 'sk-or-' شروع شود.</p>
                 </div>
-                <p class="api-help">کلید API را از <a href="https://openrouter.ai/keys" target="_blank">سایت OpenRouter</a> دریافت کنید و اینجا وارد کنید. کلید باید با 'sk-or-' شروع شود.</p>
-            </div>
-            
-            <div class="form-group">
-                <label for="storyTheme">موضوع داستان:</label>
-                <input type="text" id="storyTheme" placeholder="مثال: سفر فضایی، جنگل جادویی، ماجراجویی دریایی" class="glass-input">
-            </div>
-            
-            <div class="form-group">
-                <label for="storyKeywords">کلمات کلیدی (اختیاری):</label>
-                <input type="text" id="storyKeywords" placeholder="مثال: ماجراجویی، راز، دوستی، کودکان" class="glass-input">
-                <p class="api-help">کلمات را با کاما (،) از هم جدا کنید. این کلمات به هوش مصنوعی در خلق داستان بهتر کمک می‌کنند.</p>
-            </div>
-            
-            <div class="form-group">
-                <label for="storyLength">طول داستان:</label>
-                <select id="storyLength" class="glass-select">
-                    <option value="short">کوتاه (حدود ۲۰۰ کلمه)</option>
-                    <option value="medium" selected>متوسط (حدود ۴۰۰ کلمه)</option>
-                    <option value="long">بلند (حدود ۶۰۰ کلمه)</option>
-                    <option value="custom">سفارشی</option>
-                </select>
-                <div id="customLengthContainer" class="custom-length-container" style="display: none;">
-                    <input type="number" id="customWordCount" class="glass-input" placeholder="تعداد تقریبی کلمات را وارد کنید (۵۰ تا ۱۰۰۰)" min="50" max="1000">
-                    <p class="api-help">مقدار تقریبی کلمات را وارد کنید - اولویت با تکمیل داستان است</p>
+                
+                <div class="form-group">
+                    <label for="storyTheme">موضوع داستان:</label>
+                    <input type="text" id="storyTheme" placeholder="مثال: سفر فضایی، جنگل جادویی، ماجراجویی دریایی" class="glass-input">
                 </div>
-            </div>
-            
-            <div class="form-group">
-                <label for="storyTone">لحن داستان:</label>
-                <select id="storyTone" class="glass-select">
-                    <option value="childish">کودکانه</option>
-                    <option value="serious">جدی</option>
-                    <option value="normal" selected>عادی</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label for="aiModel">مدل هوش مصنوعی:</label>
-                <div class="searchable-select-container">
-                    <select id="aiModel" class="glass-select searchable-select" data-search="true">
-                        <option value="">در حال بارگذاری مدل‌ها...</option>
+                
+                <div class="form-group">
+                    <label for="storyKeywords">کلمات کلیدی (اختیاری):</label>
+                    <input type="text" id="storyKeywords" placeholder="مثال: ماجراجویی، راز، دوستی، کودکان" class="glass-input">
+                    <p class="api-help">کلمات را با کاما (،) از هم جدا کنید. این کلمات به هوش مصنوعی در خلق داستان بهتر کمک می‌کنند.</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="storyLength">طول داستان:</label>
+                    <select id="storyLength" class="glass-select">
+                        <option value="short">کوتاه (حدود ۲۰۰ کلمه)</option>
+                        <option value="medium" selected>متوسط (حدود ۴۰۰ کلمه)</option>
+                        <option value="long">بلند (حدود ۶۰۰ کلمه)</option>
+                        <option value="custom">سفارشی</option>
+                    </select>
+                    <div id="customLengthContainer" class="custom-length-container" style="display: none;">
+                        <input type="number" id="customWordCount" class="glass-input" placeholder="تعداد تقریبی کلمات را وارد کنید (۵۰ تا ۱۰۰۰)" min="50" max="1000">
+                        <p class="api-help">مقدار تقریبی کلمات را وارد کنید - اولویت با تکمیل داستان است</p>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="storyTone">لحن داستان:</label>
+                    <select id="storyTone" class="glass-select">
+                        <option value="childish">کودکانه</option>
+                        <option value="serious">جدی</option>
+                        <option value="normal" selected>عادی</option>
                     </select>
                 </div>
-                <p id="modelLoadingStatus" class="api-help">مدل‌ها به صورت خودکار از OpenRouter بارگذاری می‌شوند.</p>
-            </div>
-            
-            <button id="generateStory" class="glass-button">ساخت داستان</button>
-            
-            <div class="loading-spinner" id="loading">
-                <div class="spinner"></div>
-                <p>در حال ساخت داستان...</p>
-            </div>
-            
-            <div id="storyResult" class="story-container story-result">
-                <h2>داستان شما</h2>
-                <div id="storyContent" class="story-content"></div>
-                <div class="word-counter" id="wordCounter">تعداد کلمات: <span id="wordCount">0</span></div>
-                <div class="story-actions">
-                    <button id="viewFullStoryBtn" class="glass-button">
-                        <i class="fas fa-eye"></i> مشاهده کل داستان
-                    </button>
-                    <button id="copyStoryBtn" class="glass-button">
-                        <i class="fas fa-copy"></i> کپی داستان
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <div class="glass-card">
-            <div class="history-header">
-                <h2>تاریخچه داستان‌ها</h2>
-                <button id="toggleHistory" class="toggle-history-btn">
-                    <i class="fas fa-chevron-down"></i>
-                </button>
-            </div>
-            <div id="savedStories" class="saved-stories" style="display: none;">
-                <!-- داستان‌های ذخیره شده اینجا نمایش داده می‌شوند -->
-            </div>
-        </div>
-
-        <div id="editStoryModal" class="modal">
-            <div class="modal-content glass-card">
-                <h2>ویرایش داستان</h2>
+                
                 <div class="form-group">
-                    <label for="editStoryTitle">عنوان داستان:</label>
-                    <input type="text" id="editStoryTitle" class="glass-input" placeholder="عنوان داستان را وارد کنید">
+                    <label for="aiModel">مدل هوش مصنوعی:</label>
+                    <div class="searchable-select-container">
+                        <select id="aiModel" class="glass-select searchable-select" data-search="true">
+                            <option value="">در حال بارگذاری مدل‌ها...</option>
+                        </select>
+                    </div>
+                    <p id="modelLoadingStatus" class="api-help">مدل‌ها به صورت خودکار از OpenRouter بارگذاری می‌شوند.</p>
                 </div>
-                <div class="form-group">
-                    <label for="editStoryContent">متن داستان:</label>
-                    <textarea id="editStoryContent" class="glass-input" rows="10" placeholder="متن داستان را وارد کنید"></textarea>
+                
+                <button id="generateStory" class="glass-button">ساخت داستان</button>
+                
+                <div class="loading-spinner" id="loading">
+                    <div class="spinner"></div>
+                    <p>در حال ساخت داستان...</p>
                 </div>
-                <div class="modal-buttons">
-                    <button id="saveEditBtn" class="glass-button">ذخیره تغییرات</button>
-                    <button id="cancelEditBtn" class="glass-button">انصراف</button>
+                
+                <div id="storyResult" class="story-container story-result">
+                    <h2>داستان شما</h2>
+                    <div id="storyContent" class="story-content"></div>
+                    <div class="word-counter" id="wordCounter">تعداد کلمات: <span id="wordCount">0</span></div>
+                    <div class="story-actions">
+                        <button id="viewFullStoryBtn" class="glass-button">
+                            <i class="fas fa-eye"></i> مشاهده کل داستان
+                        </button>
+                        <button id="copyStoryBtn" class="glass-button">
+                            <i class="fas fa-copy"></i> کپی داستان
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div id="viewStoryModal" class="modal view-story-modal">
-            <div class="modal-content glass-card">
-                <h2>مشاهده داستان</h2>
-                <div class="story-metadata">
-                    <span><i class="fas fa-calendar"></i> تاریخ: <span id="viewStoryDate"></span></span>
-                    <span><i class="fas fa-tag"></i> کلمات کلیدی: <span id="viewStoryKeywords"></span></span>
-                    <span><i class="fas fa-ruler"></i> طول: <span id="viewStoryLength"></span></span>
-                    <span><i class="fas fa-calculator"></i> تعداد کلمات: <span id="viewStoryWordCount"></span></span>
-                    <span><i class="fas fa-robot"></i> مدل: <span id="viewStoryModel"></span></span>
+            <div class="glass-card">
+                <div class="history-header">
+                    <h2>تاریخچه داستان‌ها</h2>
+                    <button id="toggleHistory" class="toggle-history-btn">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
-                <div class="story-full-content" id="viewStoryContent"></div>
-                <div class="modal-buttons">
-                    <button id="closeViewBtn" class="glass-button">بستن</button>
+                <div id="savedStories" class="saved-stories" style="display: none;">
+                    <!-- داستان‌های ذخیره شده اینجا نمایش داده می‌شوند -->
+                </div>
+            </div>
+
+            <div id="editStoryModal" class="modal">
+                <div class="modal-content glass-card">
+                    <h2>ویرایش داستان</h2>
+                    <div class="form-group">
+                        <label for="editStoryTitle">عنوان داستان:</label>
+                        <input type="text" id="editStoryTitle" class="glass-input" placeholder="عنوان داستان را وارد کنید">
+                    </div>
+                    <div class="form-group">
+                        <label for="editStoryContent">متن داستان:</label>
+                        <textarea id="editStoryContent" class="glass-input" rows="10" placeholder="متن داستان را وارد کنید"></textarea>
+                    </div>
+                    <div class="modal-buttons">
+                        <button id="saveEditBtn" class="glass-button">ذخیره تغییرات</button>
+                        <button id="cancelEditBtn" class="glass-button">انصراف</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="viewStoryModal" class="modal view-story-modal">
+                <div class="modal-content glass-card">
+                    <h2>مشاهده داستان</h2>
+                    <div class="story-metadata">
+                        <span><i class="fas fa-calendar"></i> تاریخ: <span id="viewStoryDate"></span></span>
+                        <span><i class="fas fa-tag"></i> کلمات کلیدی: <span id="viewStoryKeywords"></span></span>
+                        <span><i class="fas fa-ruler"></i> طول: <span id="viewStoryLength"></span></span>
+                        <span><i class="fas fa-calculator"></i> تعداد کلمات: <span id="viewStoryWordCount"></span></span>
+                        <span><i class="fas fa-robot"></i> مدل: <span id="viewStoryModel"></span></span>
+                    </div>
+                    <div class="story-full-content" id="viewStoryContent"></div>
+                    <div class="modal-buttons">
+                        <button id="closeViewBtn" class="glass-button">بستن</button>
+                    </div>
                 </div>
             </div>
         </div>
+        
+        <footer class="footer">
+            <p>احسان شمسی</p>
+        </footer>
     </div>
     
     <script src="script.js"></script>

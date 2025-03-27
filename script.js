@@ -102,6 +102,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     b.classList.remove('active');
                 });
                 btn.classList.add('active');
+                
+                // بستن منوی رنگ‌ها بعد از انتخاب
+                document.querySelector('.theme-colors').classList.remove('show');
             });
         });
     }
